@@ -2,7 +2,7 @@
 
 Inspired from [gimme-aws-creds](https://github.com/Nike-Inc/gimme-aws-creds).
 
-**macOS only** - This script works with macOS(zsh/bash). Windows/Linux users will need a powershell script(I'll add that later).
+**macOS only** - This script works with macOS(zsh/bash). Windows users will need a powershell script(I'll add that later).
 
 ## Why I Built This
 
