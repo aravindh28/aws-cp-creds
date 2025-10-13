@@ -6,7 +6,7 @@ Inspired from [gimme-aws-creds](https://github.com/Nike-Inc/gimme-aws-creds).
 
 ## Why I Built This
 
-If you're taking courses with AWS Academy, you know the annoying workflow: every time you start a lab session, you have to:
+If you're taking courses with AWS Academy, every time you start a lab session, you have to:
 1. Open Canvas
 2. Click "AWS Details"
 3. Copy the credentials
@@ -23,7 +23,7 @@ This script:
 - Updates your `~/.aws/credentials` file automatically
 - Prevents you from pasting wrong or empty content
 
-Now you just copy from Canvas, run one command, and you're done.
+Now you just copy credentials from Canvas, and run `aws-cp-creds`
 
 ## Prerequisites
 
