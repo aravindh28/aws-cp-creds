@@ -1,4 +1,4 @@
-# aws-cp-creds
+# AWS Academy Credentials Auto-Updater
 
 **macOS only** - This script works with macOS(zsh/bash). Windows/Linux users will need a powershell script(I'll add that later).
 
@@ -31,7 +31,26 @@ Now you just copy from Canvas, run one command, and you're done.
 
 ## Installation
 
-### Step 1: Download the Script
+### Quick Install (Recommended)
+
+Run this command in your terminal:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/aravindh28/aws-cp-creds/main/install.sh | bash
+```
+
+This will:
+- Download the script to `~/update-aws-creds.sh`
+- Add the `aws-cp-creds` alias to your shell config
+- Set everything up automatically
+
+After installation, open a new terminal window or run `source ~/.zshrc` (or `source ~/.bash_profile` for bash).
+
+### Manual Installation
+
+If you prefer to install manually:
+
+#### Step 1: Download the Script
 
 Download the `update-aws-creds.sh` file to your home directory:
 
@@ -44,13 +63,13 @@ curl -O https://raw.githubusercontent.com/aravindh28/aws-cp-creds/main/update-aw
 # cp /path/to/repo/update-aws-creds.sh ~/update-aws-creds.sh
 ```
 
-### Step 2: Make the Script Executable
+#### Step 2: Make the Script Executable
 
 ```bash
 chmod +x ~/update-aws-creds.sh
 ```
 
-### Step 3: Add an Alias (Recommended)
+#### Step 3: Add an Alias (Optional but Recommended)
 
 This lets you run the script with a short command like `aws-cp-creds` instead of typing the full path.
 
@@ -73,21 +92,12 @@ source ~/.zshrc
 
 > **Tip:** You can use any alias name you want, aws-cp-creds is just what came to my mind to not confuse it with gimme-aws-creds (OKTA)
 
-### Step 4: Test It
-
-1. Go to Canvas → AWS Academy → Start Lab → Click "AWS Details"
-2. Copy the credentials block (⌘+C)
-3. Run your alias:
-   ```bash
-   aws-cp-creds
-   ```
-
 ## Usage
 
 Every time you start a new AWS Academy lab:
 
 1. Copy credentials from Canvas (click "AWS Details", select all, ⌘+C)
-2. Run the command:
+2. Run the command in your terminal:
    ```bash
    aws-cp-creds
    ```
@@ -139,6 +149,7 @@ Then reload with:
 ```bash
 source ~/.bash_profile
 ```
+
 ## Credits
 
 I love LLMs. Script and documentation created with assistance from Claude (Anthropic).
