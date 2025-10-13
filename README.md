@@ -141,7 +141,7 @@ source ~/.bash_profile
 ```
 ## Credits
 
-Script and documentation created with assistance from Claude (Anthropic).
+I love LLMs. Script and documentation created with assistance from Claude (Anthropic).
 
 ## Contributing
 
