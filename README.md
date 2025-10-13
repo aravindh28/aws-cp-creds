@@ -1,4 +1,4 @@
-# AWS Academy Credentials Auto-Updater
+# aws-cp-creds
 
 **macOS only** - This script works with macOS(zsh/bash). Windows/Linux users will need a powershell script(I'll add that later).
 
