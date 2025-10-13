@@ -4,7 +4,7 @@ Inspired from [gimme-aws-creds](https://github.com/Nike-Inc/gimme-aws-creds).
 
 **macOS only** - This script works with macOS(zsh/bash). Windows users will need a powershell script(I'll add that later).
 
-## Why I Built This
+## Motivation
 
 If you're taking courses with AWS Academy, every time you start a lab session, you have to:
 1. Open Canvas
