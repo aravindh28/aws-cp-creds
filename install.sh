@@ -23,8 +23,16 @@ elif [ -f ~/.bash_profile ]; then
 elif [ -f ~/.bashrc ]; then
     SHELL_CONFIG=~/.bashrc
 else
-    echo "Error: Could not find shell config file"
-    exit 1
+    # No config file exists, create one based on current shell
+    if [[ "$SHELL" == *"zsh"* ]]; then
+        SHELL_CONFIG=~/.zshrc
+        touch "$SHELL_CONFIG"
+        echo "Created $SHELL_CONFIG"
+    else
+        SHELL_CONFIG=~/.bash_profile
+        touch "$SHELL_CONFIG"
+        echo "Created $SHELL_CONFIG"
+    fi
 fi
 
 # Check if alias already exists
