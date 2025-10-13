@@ -13,7 +13,7 @@ If you're taking courses with AWS Academy, every time you start a lab session, y
 4. Open `~/.aws/credentials` in TextEdit or vim
 5. Paste and save
 
-I got tired of manually editing the credentials file (or dealing with vim), so I automated it.
+I got tired of manually editing the credentials file (or dealing with vim), so this partially automates it.
 
 ## What This Does
 
