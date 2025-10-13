@@ -19,8 +19,9 @@ I got tired of manually editing the credentials file (or dealing with vim), so t
 
 This script:
 - Reads AWS credentials directly from your clipboard
-- Validates the format (checks for `[default]`, `aws_access_key_id`, `aws_secret_access_key`, and `aws_session_token`)
-- Updates your `~/.aws/credentials` file automatically
+- Supports multiple AWS profiles (default, work, staging, etc.)
+- Validates the format (checks for profile headers and actual credential values)
+- Updates only the specified profile in your `~/.aws/credentials` file, keeping other profiles intact
 - Prevents you from pasting wrong or empty content
 
 Now you just copy credentials from Canvas, and run `aws-cp-creds`
@@ -96,6 +97,8 @@ source ~/.zshrc
 
 ## Usage
 
+### Basic Usage
+
 Every time you start a new AWS Academy lab:
 
 1. Copy credentials from Canvas (click "AWS Details", select all, ⌘+C)
@@ -104,15 +107,30 @@ Every time you start a new AWS Academy lab:
    aws-cp-creds
    ```
 
+The script will detect the profile name from your clipboard (usually `[default]`) and update only that profile.
+
+### Using the --profile Flag
+
+If you want to save credentials under a different profile name:
+
+```bash
+aws-cp-creds --profile work
+```
+
+This is useful when:
+- You copy credentials that have `[default]` but want to save them as `[work]`
+- You're managing multiple AWS accounts
+- You want to organize your credentials by environment
+
 ## What the Script Validates
 
 The script checks for these required fields before updating:
-- `[default]` section header
-- `aws_access_key_id`
-- `aws_secret_access_key`
-- `aws_session_token`
+- Profile name format (letters, numbers, hyphens, underscores only)
+- `aws_access_key_id` with an actual value
+- `aws_secret_access_key` with an actual value
+- `aws_session_token` with an actual value
 
-If any are missing, it will tell you exactly what's wrong and won't overwrite your credentials file.
+If any are missing or invalid, it will tell you exactly what's wrong and won't overwrite your credentials file.
 
 ## Troubleshooting
 
@@ -131,7 +149,7 @@ Make sure you actually copied the credentials (⌘+C) before running the command
 
 ### Invalid credentials format
 
-Double-check that you copied the entire credentials block from "AWS Details", not just part of it. It should include all four components listed above.
+Double-check that you copied the entire credentials block from "AWS Details", not just part of it. It should include all three required fields with values.
 
 ### Script doesn't have execute permissions
 
