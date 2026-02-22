@@ -2,7 +2,7 @@
 
 Inspired from [gimme-aws-creds](https://github.com/Nike-Inc/gimme-aws-creds).
 
-**macOS only** - This script works with macOS(zsh/bash). Windows users will need a powershell script(I'll add that later).
+Works on **macOS/Linux** (bash/zsh) and **Windows** (PowerShell).
 
 ## Motivation
 
@@ -28,13 +28,20 @@ Now you just copy credentials from Canvas, and run `aws-cp-creds`
 
 ## Prerequisites
 
-- macOS (uses `pbpaste` for clipboard access)
+### macOS / Linux
+- macOS (uses `pbpaste` for clipboard) or Linux (uses `xclip` or `xsel`)
 - AWS CLI installed (or at least the `~/.aws` directory created)
 - Terminal access
 
+### Windows
+- Windows 10/11 with PowerShell 5.1+ (pre-installed)
+- AWS CLI installed (or the script will create `~\.aws` for you)
+
 ## Installation
 
-### Quick Install (Recommended)
+### macOS / Linux
+
+#### Quick Install (Recommended)
 
 Run this command in your terminal:
 
@@ -49,11 +56,11 @@ This will:
 
 After installation, open a new terminal window or run `source ~/.zshrc` (or `source ~/.bash_profile` for bash).
 
-### Manual Installation
+#### Manual Installation
 
 If you prefer to install manually:
 
-#### Step 1: Download the Script
+##### Step 1: Download the Script
 
 Download the `update-aws-creds.sh` file to your home directory:
 
@@ -66,13 +73,13 @@ curl -O https://raw.githubusercontent.com/aravindh28/aws-cp-creds/main/update-aw
 # cp /path/to/repo/update-aws-creds.sh ~/update-aws-creds.sh
 ```
 
-#### Step 2: Make the Script Executable
+##### Step 2: Make the Script Executable
 
 ```bash
 chmod +x ~/update-aws-creds.sh
 ```
 
-#### Step 3: Add an Alias (Optional but Recommended)
+##### Step 3: Add an Alias (Optional but Recommended)
 
 This lets you run the script with a short command like `aws-cp-creds` instead of typing the full path.
 
@@ -95,15 +102,73 @@ source ~/.zshrc
 
 > **Tip:** You can use any alias name you want, aws-cp-creds is just what came to my mind to not confuse it with gimme-aws-creds (OKTA)
 
+---
+
+### Windows (PowerShell)
+
+#### Quick Install (Recommended)
+
+Open PowerShell and run:
+
+```powershell
+irm https://raw.githubusercontent.com/aravindh28/aws-cp-creds/main/install.ps1 | iex
+```
+
+This will:
+- Download the script to `~\update-aws-creds.ps1`
+- Add the `aws-cp-creds` function to your PowerShell profile
+- Set everything up automatically
+
+After installation, open a new PowerShell window or run `. $PROFILE`.
+
+> **Note:** If you get an error about execution policies, run this first:
+> ```powershell
+> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+> ```
+
+#### Manual Installation
+
+##### Step 1: Download the Script
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/aravindh28/aws-cp-creds/main/update-aws-creds.ps1" -OutFile "$env:USERPROFILE\update-aws-creds.ps1"
+```
+
+##### Step 2: Add to Your PowerShell Profile (Optional but Recommended)
+
+Open your PowerShell profile in Notepad:
+```powershell
+notepad $PROFILE
+```
+
+> **Note:** If the file doesn't exist, PowerShell will ask if you want to create it. Click Yes.
+
+Add this at the end of the file:
+```powershell
+function aws-cp-creds {
+    & "$env:USERPROFILE\update-aws-creds.ps1" @args
+}
+```
+
+Save and close Notepad, then reload your profile:
+```powershell
+. $PROFILE
+```
+
 ## Usage
 
 ### Basic Usage
 
 Every time you start a new AWS Academy lab:
 
-1. Copy credentials from Canvas (click "AWS Details", select all, ⌘+C)
+1. Copy credentials from Canvas (click "AWS Details", select all, ⌘+C or Ctrl+C)
 2. Run the command in your terminal:
    ```bash
+   # macOS / Linux
+   aws-cp-creds
+   ```
+   ```powershell
+   # Windows PowerShell
    aws-cp-creds
    ```
 
@@ -114,7 +179,12 @@ The script will detect the profile name from your clipboard (usually `[default]`
 If you want to save credentials under a different profile name:
 
 ```bash
+# macOS / Linux
 aws-cp-creds --profile work
+```
+```powershell
+# Windows PowerShell
+aws-cp-creds -Profile work
 ```
 
 This is useful when:
@@ -169,6 +239,26 @@ Then reload with:
 ```bash
 source ~/.bash_profile
 ```
+
+### Windows: Script won't run / execution policy error
+
+Run this once in PowerShell:
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Windows: Command not found: aws-cp-creds
+
+Your profile function isn't loaded. Try:
+```powershell
+. $PROFILE
+```
+
+Or open a new PowerShell window.
+
+### Windows: Clipboard is empty
+
+Make sure you actually copied the credentials (Ctrl+C) before running the command. Also, `Get-Clipboard` requires a desktop session (won't work in headless/SSH scenarios).
 
 ## Credits
 

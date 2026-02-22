@@ -86,12 +86,15 @@ mkdir -p ~/.aws
 # If credentials file doesn't exist, create it
 if [ ! -f "$CREDS_FILE" ]; then
     echo "$CONTENT_TO_WRITE" > "$CREDS_FILE"
+    chmod 600 "$CREDS_FILE"
     echo "Credentials updated: [$PROFILE_NAME]"
     exit 0
 fi
 
 # Create temporary file
 TEMP_FILE=$(mktemp)
+chmod 600 "$TEMP_FILE"
+trap "rm -f '$TEMP_FILE'" EXIT
 
 # Read existing file and update the target profile
 IN_TARGET_PROFILE=false
@@ -126,5 +129,6 @@ fi
 
 # Replace original file
 mv "$TEMP_FILE" "$CREDS_FILE"
+chmod 600 "$CREDS_FILE"
 
 echo "Credentials updated: [$PROFILE_NAME]"
