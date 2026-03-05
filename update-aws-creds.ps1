@@ -75,14 +75,16 @@ if ($Clipboard -match "(?m)^\[$([regex]::Escape($TargetProfile))\]") {
 # Path to credentials file
 $CredsFile = Join-Path $env:USERPROFILE ".aws\credentials"
 $AwsDir = Join-Path $env:USERPROFILE ".aws"
+$FileEncoding = "ascii"
 
 # Helper: restrict file permissions to current user only
 function Set-OwnerOnly($FilePath) {
     $Acl = Get-Acl $FilePath
     $Acl.SetAccessRuleProtection($true, $false)
     $Acl.Access | ForEach-Object { $Acl.RemoveAccessRule($_) } | Out-Null
+    $CurrentUserSid = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
     $Rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-        $env:USERNAME, "FullControl", "Allow"
+        $CurrentUserSid, "FullControl", "Allow"
     )
     $Acl.SetAccessRule($Rule)
     Set-Acl -Path $FilePath -AclObject $Acl
@@ -95,7 +97,7 @@ if (-not (Test-Path $AwsDir)) {
 
 # If credentials file doesn't exist, create it
 if (-not (Test-Path $CredsFile)) {
-    $ContentToWrite | Set-Content -Path $CredsFile -NoNewline
+    $ContentToWrite | Set-Content -Path $CredsFile -NoNewline -Encoding $FileEncoding
     Set-OwnerOnly $CredsFile
     Write-Host "Credentials updated: [$TargetProfile]"
     exit 0
@@ -104,7 +106,7 @@ if (-not (Test-Path $CredsFile)) {
 # Read existing file and update the target profile
 $ExistingContent = Get-Content -Path $CredsFile -Raw
 if ([string]::IsNullOrEmpty($ExistingContent)) {
-    $ContentToWrite | Set-Content -Path $CredsFile -NoNewline
+    $ContentToWrite | Set-Content -Path $CredsFile -NoNewline -Encoding $FileEncoding
     Set-OwnerOnly $CredsFile
     Write-Host "Credentials updated: [$TargetProfile]"
     exit 0
@@ -148,7 +150,7 @@ if (-not $ProfileFound) {
 }
 
 # Write the updated content
-($OutputLines -join "`n") | Set-Content -Path $CredsFile -NoNewline
+($OutputLines -join "`n") | Set-Content -Path $CredsFile -NoNewline -Encoding $FileEncoding
 Set-OwnerOnly $CredsFile
 
 Write-Host "Credentials updated: [$TargetProfile]"
