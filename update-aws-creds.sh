@@ -30,7 +30,16 @@ done
 echo "Checking clipboard content..."
 
 # Get clipboard content
-CLIPBOARD=$(pbpaste)
+if command -v pbpaste >/dev/null 2>&1; then
+    CLIPBOARD=$(pbpaste)
+elif command -v xclip >/dev/null 2>&1; then
+    CLIPBOARD=$(xclip -selection clipboard -o)
+elif command -v xsel >/dev/null 2>&1; then
+    CLIPBOARD=$(xsel --clipboard --output)
+else
+    echo "Error: No supported clipboard tool found (pbpaste, xclip, or xsel)"
+    exit 1
+fi
 
 # Check if clipboard is empty
 if [ -z "$CLIPBOARD" ]; then
@@ -94,7 +103,7 @@ fi
 # Create temporary file
 TEMP_FILE=$(mktemp)
 chmod 600 "$TEMP_FILE"
-trap "rm -f '$TEMP_FILE'" EXIT
+trap 'rm -f "$TEMP_FILE"' EXIT
 
 # Read existing file and update the target profile
 IN_TARGET_PROFILE=false

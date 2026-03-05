@@ -7,10 +7,15 @@ Write-Host "Downloading update-aws-creds.ps1..."
 $ScriptPath = Join-Path $env:USERPROFILE "update-aws-creds.ps1"
 
 try {
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/aravindh28/aws-cp-creds/main/update-aws-creds.ps1" -OutFile $ScriptPath -UseBasicParsing
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/aravindh28/aws-cp-creds/main/update-aws-creds.ps1" -OutFile $ScriptPath -UseBasicParsing -ErrorAction Stop
 } catch {
     Write-Host "Error: Failed to download update-aws-creds.ps1"
     Write-Host $_.Exception.Message
+    exit 1
+}
+
+if (-not (Test-Path $ScriptPath) -or (Get-Item $ScriptPath).Length -eq 0) {
+    Write-Host "Error: Downloaded update-aws-creds.ps1 is missing or empty"
     exit 1
 }
 
