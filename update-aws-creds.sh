@@ -30,7 +30,16 @@ done
 echo "Checking clipboard content..."
 
 # Get clipboard content
-CLIPBOARD=$(pbpaste)
+if command -v pbpaste >/dev/null 2>&1; then
+    CLIPBOARD=$(pbpaste)
+elif command -v xclip >/dev/null 2>&1; then
+    CLIPBOARD=$(xclip -selection clipboard -o)
+elif command -v xsel >/dev/null 2>&1; then
+    CLIPBOARD=$(xsel --clipboard --output)
+else
+    echo "Error: No supported clipboard tool found (pbpaste, xclip, or xsel)"
+    exit 1
+fi
 
 # Check if clipboard is empty
 if [ -z "$CLIPBOARD" ]; then
@@ -80,18 +89,23 @@ fi
 # Path to credentials file
 CREDS_FILE=~/.aws/credentials
 
-# Ensure .aws directory exists
-mkdir -p ~/.aws
+# Ensure .aws directory exists with restricted permissions
+mkdir -pm 700 ~/.aws
 
-# If credentials file doesn't exist, create it
+# Create temporary file early (used for both new and existing credential files)
+TEMP_FILE=$(mktemp)
+chmod 600 "$TEMP_FILE"
+trap 'rm -f "$TEMP_FILE"' EXIT INT TERM
+
+# If credentials file doesn't exist, create it via the temp file to avoid a
+# race where the file is briefly world-readable before chmod takes effect
 if [ ! -f "$CREDS_FILE" ]; then
-    echo "$CONTENT_TO_WRITE" > "$CREDS_FILE"
+    echo "$CONTENT_TO_WRITE" > "$TEMP_FILE"
+    mv "$TEMP_FILE" "$CREDS_FILE"
+    chmod 600 "$CREDS_FILE"
     echo "Credentials updated: [$PROFILE_NAME]"
     exit 0
 fi
-
-# Create temporary file
-TEMP_FILE=$(mktemp)
 
 # Read existing file and update the target profile
 IN_TARGET_PROFILE=false
@@ -126,5 +140,6 @@ fi
 
 # Replace original file
 mv "$TEMP_FILE" "$CREDS_FILE"
+chmod 600 "$CREDS_FILE"
 
 echo "Credentials updated: [$PROFILE_NAME]"
