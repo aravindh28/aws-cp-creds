@@ -75,7 +75,7 @@ if ($Clipboard -match "(?m)^\[$([regex]::Escape($TargetProfile))\]") {
 # Path to credentials file
 $CredsFile = Join-Path $env:USERPROFILE ".aws\credentials"
 $AwsDir = Join-Path $env:USERPROFILE ".aws"
-$FileEncoding = "ascii"
+$FileEncoding = "ASCII"
 
 # Helper: restrict file permissions to current user only
 function Set-OwnerOnly($FilePath) {
