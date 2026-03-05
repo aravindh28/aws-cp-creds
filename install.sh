@@ -12,7 +12,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-chmod +x ~/update-aws-creds.sh
+if [ ! -s ~/update-aws-creds.sh ]; then
+    echo "Error: Downloaded update-aws-creds.sh is missing or empty"
+    exit 1
+fi
+
+chmod 700 ~/update-aws-creds.sh
 echo "Script installed to ~/update-aws-creds.sh"
 
 # Detect shell and config file

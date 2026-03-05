@@ -17,7 +17,12 @@ if ($ProfileName) {
 Write-Host "Checking clipboard content..."
 
 # Get clipboard content
-$Clipboard = Get-Clipboard -Raw
+try {
+    $Clipboard = Get-Clipboard -Raw
+} catch {
+    Write-Host "Error: Failed to access clipboard: $($_.Exception.Message)"
+    exit 1
+}
 
 # Check if clipboard is empty
 if ([string]::IsNullOrWhiteSpace($Clipboard)) {
@@ -77,7 +82,7 @@ $CredsFile = Join-Path $env:USERPROFILE ".aws\credentials"
 $AwsDir = Join-Path $env:USERPROFILE ".aws"
 $FileEncoding = "ASCII"
 
-# Helper: restrict file permissions to current user only
+# Helper: restrict file or directory permissions to current user only
 function Set-OwnerOnly($FilePath) {
     $Acl = Get-Acl $FilePath
     $Acl.SetAccessRuleProtection($true, $false)
@@ -90,9 +95,10 @@ function Set-OwnerOnly($FilePath) {
     Set-Acl -Path $FilePath -AclObject $Acl
 }
 
-# Ensure .aws directory exists
+# Ensure .aws directory exists with restricted permissions
 if (-not (Test-Path $AwsDir)) {
     New-Item -ItemType Directory -Path $AwsDir -Force | Out-Null
+    Set-OwnerOnly $AwsDir
 }
 
 # If credentials file doesn't exist, create it
